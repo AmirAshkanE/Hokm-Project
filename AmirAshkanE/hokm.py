@@ -80,6 +80,7 @@ while True :
     round_score = 3
     turn_index = hakem_index
     while True:
+        print(f"Hokm is: {hokm}")
         table = []
         play_history={}
         active_suit = ""
