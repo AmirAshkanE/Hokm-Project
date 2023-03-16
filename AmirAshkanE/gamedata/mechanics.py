@@ -53,24 +53,63 @@ def give_hand(deck:list,player,n):
     for card in deck:
         player.hand.append(card)
         deck.remove(card)
+        player.hand.sort()
         i+=1
         if i==n:
             break
-            
+
+
+
+def npc_hokm_chooser(player):
+    is_chosen = False
+    c_count,h_count,s_count,d_count = 0,0,0,0
+    c_value,h_value,s_value,d_value = 0,0,0,0
+    for card in player.hand:
+        if card[0] == "Club":
+            c_count+=1
+            c_value += card[1]
+        elif card[0] == "Heart":
+            h_count+=1
+            h_value += card[1]
+        elif card[0] == "Spade":
+            s_count+=1
+            s_value += card[1]
+        elif card[0] == "Diamond":
+            d_count+=1
+            d_value += card[1]
+    
+    counts={"Club":c_count,"Heart":h_count,"Spade":s_count,"Diamond":d_count}
+    values={"Club":c_value,"Heart":h_value,"Spade":s_value,"Diamond":d_value}
+
+    for c,v in counts.items():
+        if v >=3:
+            return c
+            is_chosen = True
+            break
+        
+    max_value_suit = max(values, key=values.get)
+    
+    if not is_chosen:
+        return max_value_suit
+
 def choose_hokm(player):
     if player.is_player:
         print(player.hand)
-        suit = input("Choose Hokm suit: ")
-        for card in player.hand:
-            if suit.capitalize() == card[0]:
-                print(f"Hokm is: {card[0]}")
+        while True:
+            suit = input("Choose Hokm suit: ")
+            if suit.capitalize() not in ["Club","Heart","Diamond","Spade"]:
+                print("Choose the correct suit: ")
+            else:
+                print(f"Hokm is: {suit.capitalize()}")
                 break
+        
         return suit.capitalize()
     else:
-        i = randint(0, len(player.hand)-1)
-        card = player.hand[i]
-        print(f"Hokm is: {card[0]}")
-        return card[0]
+        # i = randint(0, len(player.hand)-1)
+        # card = player.hand[i]
+        print(player.hand)
+        print(f"Hokm is: {npc_hokm_chooser(player)}")
+        return npc_hokm_chooser(player)
 
 def check_suit_availability(player,active_suit):
     suits_in_hand=[]
@@ -92,7 +131,13 @@ def play_cards(player,table,active_suit,play_history):
         has_chosen = False
         while not has_chosen:
             print(player.hand)
-            c,v = input("Choose a card from your hand(seperate suit and value by space): ").split()
+            while True:
+                    try:
+                        c,v = input("Choose a card from your hand(seperate suit and value by space): ").split()
+                        break
+                    except ValueError:
+                        print("Please provide the correct data:")
+                
             drawn_card = [card for card in player.hand if c.capitalize() == card[0] and int(v) == card[1]][0]
             if drawn_card not in player.hand:
                 print("You must choose a card from you hand!!")

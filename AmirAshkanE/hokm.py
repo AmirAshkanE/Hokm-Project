@@ -93,14 +93,14 @@ while True :
                 turn_index += 1
                 print(table)
         
-        print(play_history)
+            print(play_history)
             # Compare cards
             # Determine Winner and add score
         winner_player = mc.find_winner(play_history, mc.compare_cards(table, hokm, active_suit))
         winner_team = mc.find_winner_team(teams, winner_player)
         turn_index = mc.set_winner_index(winner_player, player_list)
         mc.give_point_winner(teams, winner_player)
-        print(team_a.team_score,team_b.team_score)
+        print(f"Team A score: {team_a.team_score},Team B score: {team_b.team_score}")
         
         if team_a.team_score >= round_score or team_b.team_score >= round_score:
             break
